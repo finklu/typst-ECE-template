@@ -10,10 +10,9 @@
   title: "Laboratory Exercise Title",
   subtitle: "Optional Subtitle",
   authors: (
-    "Forename Surname",
-    "Second Author",
+    "Lucas Fink",
   ),
-  program: PROGRAM_ECM,
+  program: PROGRAM_EEM,
   semester: "WS2026",
   language: "en",
   doc-type: "report",
@@ -21,7 +20,7 @@
   // date: datetime(year: 2026, month: 10, day: 16),
 
   // Toggle optional report chapters (Order: Resources -> Instruments -> AI Usage -> Signatures -> Appendix)
-  show-resources: true,
+  show-resources: false,
   show-instruments: true,
   show-ai-usage: true,
   show-appendix: true,
@@ -33,4 +32,4 @@
 #import "@preview/zap:0.6.0"
 
 // Main Exercise Chapters (1.1 Task, 1.2 Schematic, 1.3 Formulas, 1.4 Tables, 1.5 Diagrams, 1.6 Discussion)
-#include "chapters/introduction.typ"
+#include "chapters/report.typ"

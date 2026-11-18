@@ -361,9 +361,9 @@
 
   set figure(gap: 1.5em)
 
-  show figure.caption: it => text(
+  show figure.caption: it => block(width: 100%, align(left, text(
     [*#it.supplement #it.counter.display(it.numbering):* #it.body],
-  )
+  )))
 
   set align(left) // align text left (i.e. no longer centered)
 
@@ -577,14 +577,13 @@
 
     // 3. AI Usage Declaration (Numbered Chapter)
     if show-ai-usage {
-      heading(if is-german { "KI-Nutzungserklärung" } else { "AI Usage Declaration" })
+      heading(if is-german { "KI-Nutzungserklärung" } else { "AI Usage" })
       include "chapters/report-specific/ai_usage.typ"
     }
 
     // 4. Date and Signatures (Always enabled, Numbered Chapter per Guidelines)
-    heading(if is-german { "Datum und Unterschriften" } else { "Date and Signatures" })
-    v(1em)
-    align(center, table(
+heading(if is-german { "Datum und Unterschriften" } else { "Date and Signatures" })
+    align(center + horizon, table(
       columns: if author-list.len() == 1 { 1 } else { 2 },
       stroke: 0pt,
       align: center,
@@ -594,7 +593,7 @@
         .map(((index, author)) => table.cell(align(center, stack(
           dir: ttb,
           spacing: 10pt,
-          image("assets/graphics/others/signature_" + str(index + 1) + ".png", height: 10mm),
+          image("assets/graphics/others/signature_" + str(index + 1) + ".jpg", height: 10mm),
           line(length: if author-list.len() == 1 { 75% } else { 100% }, stroke: 0.5pt),
           align(center, author),
           [#meta.location, #date.display("[day]. [month repr:long] [year]")],
