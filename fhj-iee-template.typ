@@ -121,7 +121,7 @@
   return data
 }
 
-// --- The Main Template Function ---
+// --- The Main Template Function --
 #let fhj-iee-template(
   title: "Thesis Title",
   subtitle: none,
@@ -136,16 +136,12 @@
   abstract-de: none,
   abstract-en: none,
   acknowledgments: none,
-  report-task: none,
-  report-schematic: none,
-  report-formulas: none,
-  report-measurement-tables: none,
-  report-diagrams: none,
-  report-discussion: none,
-  report-instruments: none,
-  report-signature: none,
-  report-appendix: none,
-  show-list-of: ("figures", "tables", "equations", "listings"), // which lists/outlines to show
+  show-list-of: ("figures", "tables", "equations", "listings"),
+  // Toggleable Report Chapters
+  show-resources: false,
+  show-instruments: true,
+  show-ai-usage: false,
+  show-appendix: false,
   body,
 ) = {
   // Set PDF document metadata.
@@ -567,20 +563,27 @@
   // ==========================================================
 
   if doc-type == "report" {
-    if language == "de" {
-      heading(outlined: false, numbering: none, "Geräteverzeichnis")
-    } else {
-      heading(outlined: false, numbering: none, "Instrument Device List")
-    }
-    include "chapters/report-specific/instrument_device_list.typ"
-
-    pagebreak()
-    if language == "de" {
-      heading(outlined: false, numbering: none, "Unterschriften")
-    } else {
-      heading(outlined: false, numbering: none, "Signatures")
+    // 1. Resources / Bibliography (Numbered Chapter)
+    if show-resources {
+      heading(if is-german { "Literaturverzeichnis" } else { "Resources" })
+      include "chapters/report-specific/resources.typ"
     }
 
+    // 2. Instrument Device List (Numbered Chapter)
+    if show-instruments {
+      heading(if is-german { "Geräteverzeichnis" } else { "Instrument Device List" })
+      include "chapters/report-specific/instrument_device_list.typ"
+    }
+
+    // 3. AI Usage Declaration (Numbered Chapter)
+    if show-ai-usage {
+      heading(if is-german { "KI-Nutzungserklärung" } else { "AI Usage Declaration" })
+      include "chapters/report-specific/ai_usage.typ"
+    }
+
+    // 4. Date and Signatures (Always enabled, Numbered Chapter per Guidelines)
+    heading(if is-german { "Datum und Unterschriften" } else { "Date and Signatures" })
+    v(1em)
     align(center, table(
       columns: if author-list.len() == 1 { 1 } else { 2 },
       stroke: 0pt,
@@ -597,5 +600,17 @@
           [#meta.location, #date.display("[day]. [month repr:long] [year]")],
         ))))
     ))
+
+    // 5. Appendix (Optional, resets numbering to A, B, ...)
+    if show-appendix {
+      counter(heading).update(0)
+      set heading(numbering: "A.1")
+      set math.equation(numbering: n => strong(
+        numbering("(A.1)", counter(heading.where(level: 1)).get().first(), n),
+      ))
+      set figure(numbering: n => numbering("A.1", counter(heading.where(level: 1)).get().first(), n))
+
+      include "chapters/report-specific/appendix.typ"
+    }
   }
 }

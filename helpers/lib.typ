@@ -231,3 +231,16 @@
 #let fnode(label, name: none) = (type: "node", label: label, name: name)
 #let fdecision(label, name: none) = (type: "decision", label: label, name: name)
 #let fedge(label, from: none, to: none, bend: 90deg) = (type: "edge", label: label, from: from, to: to, bend: bend)
+
+
+// --- Helper: Embed multi-page PDFs (e.g., schematics, datasheets) in Appendix ---
+#let embed-pdf(path, pages: 1, title: none, width: 100%) = {
+  if title != none {
+    heading(level: 2, title)
+  }
+  let page-list = if type(pages) == int { range(1, pages + 1) } else { pages }
+  for p in page-list {
+    align(center, image(path, page: p, width: width))
+    if p != page-list.last() { pagebreak(weak: true) }
+  }
+}
